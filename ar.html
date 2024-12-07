@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR Web Experience</title>
+    <style>
+      .arjs-loader {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .arjs-loader div {
+        text-align: center;
+        font-size: 1.25em;
+        color: white;
+      }
+      .controls {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+      }
+      @media (max-width: 768px) {
+        .controls{
+          display: block;
+        }
+      }
+      .controls button {
+        margin: 0 5px;
+        padding: 5px 10px;
+      }
+    </style>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  </head>
+  <body style="margin:0; overflow: hidden;">
+    <!-- Loading indicator -->
+    <div class="arjs-loader">
+      <div>Loading, please wait...</div>
+    </div>
+
+    <!-- Controls UI -->
+    <div class="controls">
+      <h1 style="color: red;">Gunakan mode desktop untuk pengalaman terbaik!</h1>
+    </div>
+    <a-scene embedded arjs="
+    sourceType: webcam; 
+    trackingMethod: best;
+    detectionMode: mono;
+    areaLearningButton: false;
+    sourceWidth:1280; 
+    sourceHeight:960;
+    displayWidth: 1280; 
+    displayHeight: 960;">
+      <a-assets>
+        <a-asset-item id="motherboard" src="./motherboard/scene.gltf"></a-asset-item>
+        <a-asset-item id="robot" src="./robot_playground/scene.gltf"></a-asset-item>
+        <a-asset-item id="laptop" src="./laptop/scene.gltf"></a-asset-item>
+        <a-asset-item id="pc" src="./pc/scene.gltf"></a-asset-item>
+        <img id="smkn-img" src="./images/smkn.jpeg" crossorigin="anonymous">
+      </a-assets>
+
+      <a-marker type="pattern" url="./marker/tg.patt">
+        <a-entity
+          id="motherboard"
+          gltf-model="#motherboard"
+          scale="0.5 0.5 0.5"
+          position="0 0 1"
+          rotation="0 0 0"
+        </a-entity>
+      </a-marker>
+      <a-marker type="pattern" url="./marker/Pir.patt">
+        <a-entity
+          id="robot-model"
+          gltf-model="#robot"
+          scale="1 1 1"
+          position="0 0 0"
+          rotation="0 0 0"
+          animation-mixer="clip: *; loop: repeat; timeScale: 1"
+        ></a-entity>
+      </a-marker>
+      <a-marker type="pattern" url="./marker/mcu.patt">
+        <a-entity
+          id="laptop"
+          gltf-model="#laptop"
+          scale="2 2 2"
+          position="-0.5 0 -0.5"
+          rotation="0 0 0"
+        ></a-entity>
+      </a-marker>
+      
+      <a-marker type="pattern" url="./marker/ms.patt">
+        <a-entity
+          id="pc"
+          gltf-model="#pc"
+          scale="0.002 0.002 0.002"
+          position="0 0 0"
+          rotation="0 0 0"
+        ></a-entity>
+      </a-marker>
+
+      <a-marker type="pattern" url="./marker/Doc.patt">
+        <a-image
+          src="#smkn-img"
+          position="0 0 0"
+          rotation="-90 0 0"
+          scale="2 2 2"
+          material="transparent: true; alphaTest: 0.5">
+        </a-image>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      // Hide loader when scene is loaded
+      const scene = document.querySelector('a-scene');
+      scene.addEventListener('loaded', function () {
+        const loader = document.querySelector('.arjs-loader');
+        loader.style.display = 'none';
+      });
+
+       // Improve performance with renderer settings
+       const sceneEl = document.querySelector('a-scene');
+      sceneEl.addEventListener('loaded', () => {
+        const renderer = sceneEl.renderer;
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.sortObjects = false;
+        
+        // Optimize WebGL settings
+        const gl = renderer.getContext();
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        
+        // Handle visibility changes to pause rendering when tab is not visible
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            sceneEl.pause();
+          } else {
+            sceneEl.play();
+          }
+        });
+      });
+
+      // Add error handling for model loading
+      const models = document.querySelectorAll('[gltf-model]');
+      models.forEach(model => {
+        model.addEventListener('model-error', function(evt) {
+          console.error('Error loading model:', evt.detail);
+        });
+      });
+
+      
+    </script>
+  </body>
+</html>
