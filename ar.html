@@ -66,14 +66,14 @@
     displayWidth: 640; 
     displayHeight: 480;">
       <a-assets>
-<!--         <a-asset-item id="motherboard" src="./motherboard/scene.gltf"></a-asset-item> -->
-<!--         <a-asset-item id="robot" src="./robot_playground/scene.gltf"></a-asset-item> -->
+        <a-asset-item id="motherboard" src="./motherboard/scene.gltf"></a-asset-item>
+        <a-asset-item id="robot" src="./scene.gltf"></a-asset-item>
         <a-asset-item id="laptop" src="./laptop/scene.gltf"></a-asset-item>
-<!--         <a-asset-item id="pc" src="./pc/scene.gltf"></a-asset-item> -->
+        <a-asset-item id="pc" src="./pc/scene.gltf"></a-asset-item>
         <img id="smkn-img" src="./images/smkn.jpeg" crossorigin="anonymous">
       </a-assets>
 
-<!--       <a-marker type="pattern" url="./marker/tg.patt">
+    <a-marker type="pattern" url="./marker/tg.patt">
         <a-entity
           id="motherboard"
           gltf-model="#motherboard"
@@ -92,7 +92,7 @@
           animation-mixer="clip: *; loop: repeat; timeScale: 1"
         ></a-entity>
       </a-marker> -->
-      <a-marker type="pattern" url="./marker/tg.patt">
+      <a-marker type="pattern" url="./marker/mcu.patt">
         <a-entity
           id="laptop"
           gltf-model="#laptop"
@@ -102,7 +102,7 @@
         ></a-entity>
       </a-marker>
       
-<!--       <a-marker type="pattern" url="./marker/ms.patt">
+  <a-marker type="pattern" url="./marker/ms.patt">
         <a-entity
           id="pc"
           gltf-model="#pc"
